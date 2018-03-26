@@ -3,6 +3,7 @@
 #include "ficha.h"
 #include <ctime>
 #include <cstdlib>
+#include "Jugador.h"
 #define NUMEROMAX 7
 using namespace std;
 
@@ -20,5 +21,6 @@ public:
 	int obtenerExtremo1();
 	int obtenerExtremo2();
 	Ficha cogerFicha();
-	void ponerFicha();
+	int comprobarFicha(Jugador jugador);
+	void ponerFicha(Ficha ficha);
 };

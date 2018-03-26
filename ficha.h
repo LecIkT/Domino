@@ -1,6 +1,7 @@
 #pragma once
 #include "iostream"
 using namespace std;
+
 class Ficha
 {
 	//Atributos privados por defecto. Esta clase sirve para crear ambos valores de las fichas
