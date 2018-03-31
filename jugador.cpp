@@ -52,16 +52,6 @@ Ficha* Jugador::getDobleMayor()
 	return mayor;
 }
 
-int Jugador::getPosMayor()
-{
-	return posMayor;
-}
-
-int Jugador::getPosDob()
-{
-	return posDob;
-}
-
 
 void Jugador::soltarFicha(Ficha* ficha)
 {
@@ -74,10 +64,6 @@ void Jugador::soltarFicha(Ficha* ficha)
 	}
 }
 
-void Jugador::aumentarContador()
-{
-	contadorJugador++;
-}
 
 void Jugador::borrarFicha(int posicion)
 {
@@ -90,11 +76,6 @@ void Jugador::borrarFicha(int posicion)
 		listaFichas[i + 1] = aux;
 	}
 	
-}
-
-int Jugador::getContador()
-{
-	return contadorJugador;
 }
 
 void Jugador::imprimir()
