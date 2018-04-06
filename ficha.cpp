@@ -4,6 +4,7 @@ Ficha::Ficha() {
 
 	this->valor1 = 0;
 	this->valor2 = 0;
+	this->usada = false;
 }
 Ficha::Ficha(int valor1, int valor2) {//Constructor por valores
 
@@ -19,6 +20,16 @@ int Ficha::obtenerValor1() {
 int Ficha::obtenerValor2() {
 
 	return this->valor2;
+}
+
+void Ficha::marcarUsada() {
+
+	this->usada = true;
+}
+
+void Ficha::noUsada() {
+
+	this->usada = false;
 }
 
 void Ficha::imprimir() {

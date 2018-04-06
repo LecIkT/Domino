@@ -19,20 +19,33 @@ class Mesa
 	int extremo2;
 	int posicionPozo;
 	int posicionMesa;
+	int salida;
 
 private:
 
 	void iniciarPozo();
 	void repartirFicha();
 	void primeraTirada();
+	Ficha* cogerFicha();
+	
 
 public:
 
 	Mesa();
 	int obtenerExtremo1();
 	int obtenerExtremo2();
+	void cogerFichaJ1();
+	void cogerFichaJ2();
+	int fichasJ1();
+	int fichasJ2();
+	void setQuienSale(int salida);
+	int getQuienSale();
 	void inicializar();
-	void imprimirEstado();
-	Ficha* cogerFicha();
+	int getContaPozo();
+	void clonarMesa(Mesa const  &mesa);
 	void ponerFicha(Ficha* ficha);
+	vector<Ficha*> getFichas1();
+	vector<Ficha*> getFichas2();
+	void imprimirEstado();
+	
 };

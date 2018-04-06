@@ -7,6 +7,7 @@ Mesa::Mesa() {
 	extremo2 = 0;
 	posicionMesa = 0;
 	posicionPozo = 0;
+	salida = 0;
 
 	jugador1 = new Jugador;
 	jugador2 = new Jugador;
@@ -114,15 +115,47 @@ void Mesa::primeraTirada() {
 	}
 		
 	if (jugadorQueSale == 1)
+	{
+		cout << "Mesa:" << endl << "Sale jugador1:" << endl;
 		jugador1->soltarFicha(salida);
+		setQuienSale(1);
+	}
+		
 	else
+	{
+		cout <<"Mesa:" << endl << "Sale jugador2:" << endl;
 		jugador2->soltarFicha(salida);
+		setQuienSale(2);
+	}
 
 	this->extremo1 = salida->obtenerValor1();
 	this->extremo2 = salida->obtenerValor2();
 
-	fichasMesa[0] = salida;
+	fichasMesa[posicionMesa] = salida;
 	posicionMesa++;
+	
+}
+
+void Mesa::setQuienSale(int salida)
+{
+	this->salida = salida;
+}
+
+int Mesa::getQuienSale()
+{
+	return this->salida;
+
+}
+
+vector<Ficha*> Mesa::getFichas1()
+{
+	return jugador1->getFichas(this->extremo1, this->extremo2);
+
+}
+
+vector<Ficha*> Mesa::getFichas2()
+{
+	return jugador2->getFichas(this->extremo1, this->extremo2);
 }
 
 void Mesa::inicializar()
@@ -134,7 +167,54 @@ void Mesa::inicializar()
 
 void Mesa::ponerFicha(Ficha* ficha)
 {
-	
+	if (ficha->obtenerValor1() == this->extremo1)
+	{
+		this->extremo1 = ficha->obtenerValor2();
+
+	}
+
+	else if (ficha->obtenerValor1() == this->extremo2)
+	{
+		this->extremo2 = ficha->obtenerValor2();
+
+	}
+
+	else if (ficha->obtenerValor2() == this->extremo1)
+	{
+		this->extremo1 = ficha->obtenerValor1();
+
+	}
+
+	else if (ficha->obtenerValor2() == this->extremo2)
+	{
+		this->extremo2 = ficha->obtenerValor1();
+
+	}
+
+	else
+	{
+		cout << "Poniendo ficha erronea";
+		return;
+	}
+		
+	if (this->getQuienSale() == 1)
+	{
+		jugador2->soltarFicha(ficha);
+	}
+	else
+		jugador1->soltarFicha(ficha);
+
+	fichasMesa[posicionMesa] = ficha;
+	posicionMesa++;
+}
+int Mesa::fichasJ1()
+{
+	return jugador1->fichasRestantes();
+}
+
+int Mesa::fichasJ2()
+{
+	return jugador2->fichasRestantes();
 }
 
 int Mesa::obtenerExtremo1() {
@@ -147,8 +227,39 @@ int Mesa::obtenerExtremo2() {
 	return this->extremo2;
 }
 
+void Mesa::cogerFichaJ1() {
+
+	jugador1->setFicha(cogerFicha());
+}
+
+void Mesa::cogerFichaJ2() {
+
+	jugador2->setFicha(cogerFicha());
+}
+
+int Mesa::getContaPozo()
+{
+	return this->posicionPozo;
+}
+
+void Mesa::clonarMesa(Mesa const &mesa) {
+
+	for (int i = 0; i < 28; i++)
+	{
+		this->pozo[i] = mesa.pozo[i];
+		this->fichasMesa[i] = mesa.fichasMesa[i];
+	}
+
+	this->jugador1 = mesa.jugador1->clonarJugador();
+	this->jugador2 = mesa.jugador2->clonarJugador();
+	this->extremo1 = mesa.extremo1;
+	this->extremo2 = mesa.extremo2;
+	this->posicionPozo = mesa.posicionPozo;
+	this->posicionMesa = mesa.posicionMesa;
+}
+
 Ficha* Mesa::cogerFicha() {
-	if (posicionPozo > 27)
+	if (posicionPozo >= 28)
 		return nullptr;
 
 	Ficha* aux = this->pozo[this->posicionPozo];
@@ -158,7 +269,6 @@ Ficha* Mesa::cogerFicha() {
 
 void Mesa::imprimirEstado()
 {
-	cout << "Mesa: " << endl;
 	for (int i = 0; i < posicionMesa; i++)
 		fichasMesa[i]->imprimir();
 		

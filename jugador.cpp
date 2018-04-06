@@ -7,10 +7,31 @@ Jugador::Jugador()
 
 void Jugador::setFicha(Ficha* nuevaFicha)
 {
+	if (nuevaFicha == nullptr)
+	{
+		return;
+	}
+	
 	listaFichas[contadorJugador] = nuevaFicha;
 	contadorJugador++;
 }
 
+vector<Ficha*> Jugador::getFichas(int extremo1, int extremo2)
+{
+	//Devuelve las fichas que coinciden con los extremos
+	vector<Ficha*> posibleJugada;
+
+	for (int i = 0; i < contadorJugador; i++)
+	{
+		if (extremo1 == listaFichas[i]->obtenerValor1() || extremo1 == listaFichas[i]->obtenerValor2() || extremo2 == listaFichas[i]->obtenerValor1() || extremo2 == listaFichas[i]->obtenerValor2())
+		{
+			posibleJugada.push_back( listaFichas[i] );
+		}
+
+	}
+	return posibleJugada;
+	
+}
 
 Ficha* Jugador::getFichaMayor()
 {
@@ -52,15 +73,23 @@ Ficha* Jugador::getDobleMayor()
 	return mayor;
 }
 
+int Jugador::fichasRestantes()
+{
+	return this->contadorJugador;
+}
 
 void Jugador::soltarFicha(Ficha* ficha)
 {
+	int encontrado = -1;
 	for (int i = 0; i < contadorJugador; i++)
 	{
 		if (listaFichas[i] == ficha)
 		{
-			borrarFicha(i);
+			encontrado = i;
 		}
+	}
+	if (encontrado != -1) {
+		borrarFicha(encontrado);
 	}
 }
 
@@ -76,6 +105,20 @@ void Jugador::borrarFicha(int posicion)
 		listaFichas[i + 1] = aux;
 	}
 	
+}
+
+Jugador* Jugador::clonarJugador()
+{
+	Jugador *J1 = new Jugador;
+
+	J1->contadorJugador = this->contadorJugador;
+
+	for (int i = 0; i < 28; i++)
+	{
+		J1->listaFichas[i] = this->listaFichas[i];
+	}
+
+	return J1;
 }
 
 void Jugador::imprimir()
