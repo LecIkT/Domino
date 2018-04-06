@@ -20,6 +20,7 @@ class Mesa
 	int posicionPozo;
 	int posicionMesa;
 	int salida;
+	int jugadorAnteriorHaPasado;
 
 private:
 
@@ -44,6 +45,7 @@ public:
 	int getContaPozo();
 	void clonarMesa(Mesa const  &mesa);
 	void ponerFicha(Ficha* ficha);
+	Mesa * jugarPartida();
 	vector<Ficha*> getFichas1();
 	vector<Ficha*> getFichas2();
 	void imprimirEstado();

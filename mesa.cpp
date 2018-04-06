@@ -8,6 +8,7 @@ Mesa::Mesa() {
 	posicionMesa = 0;
 	posicionPozo = 0;
 	salida = 0;
+	jugadorAnteriorHaPasado = 0;
 
 	jugador1 = new Jugador;
 	jugador2 = new Jugador;
@@ -259,7 +260,7 @@ void Mesa::clonarMesa(Mesa const &mesa) {
 }
 
 Ficha* Mesa::cogerFicha() {
-	if (posicionPozo >= 28)
+	if (posicionPozo > 27)
 		return nullptr;
 
 	Ficha* aux = this->pozo[this->posicionPozo];
@@ -278,4 +279,124 @@ void Mesa::imprimirEstado()
 	cout << "Jugador2: " << endl;
 	jugador2->imprimir();
 
+}
+
+Mesa * Mesa::jugarPartida()
+{
+	if (this->fichasJ1() == 0)
+	{
+		return this;
+	}
+
+	if (this->fichasJ2() == 0)
+	{
+		return nullptr;
+	}
+
+	if (this->jugadorAnteriorHaPasado == 2)
+	{
+		return nullptr;
+	}
+
+	if (this->getQuienSale() == 1)
+	{
+		vector<Ficha*> posiblejugada = (this->getFichas2());
+		cout << "Juega el jugador2" << endl << "Hay " << posiblejugada.size() << " jugadas posibles";
+		//mesa[i]->imprimirEstado();
+		Mesa * siguienteMesa = new Mesa;
+		Mesa * mesaGanadora = nullptr;
+
+		if (posiblejugada.size() == 0)
+		{
+			siguienteMesa->clonarMesa(*this);
+
+			if (siguienteMesa->getContaPozo() >= 28)
+			{
+				siguienteMesa->jugadorAnteriorHaPasado++;
+			}
+			else
+				siguienteMesa->cogerFichaJ2();
+
+			cout << "Jug2 coge una del pozo";
+			siguienteMesa->setQuienSale(2);
+			mesaGanadora = siguienteMesa->jugarPartida();
+			return mesaGanadora;
+
+		}
+		else
+		{
+			for (int cont = 0; cont < posiblejugada.size(); cont++) {
+
+				Ficha f = *posiblejugada.at(cont);
+				f.imprimir();
+
+				siguienteMesa->clonarMesa(*this);
+				siguienteMesa->jugadorAnteriorHaPasado = 0;
+
+				cout << "Juga2 pone ficha: ";
+				posiblejugada.at(cont)->imprimir();
+				siguienteMesa->ponerFicha(posiblejugada.at(cont));
+				siguienteMesa->setQuienSale(2);
+
+				mesaGanadora = siguienteMesa->jugarPartida();
+
+				if (mesaGanadora)
+				{
+					return mesaGanadora;
+				}
+			}
+		}
+	}
+
+	else
+	{
+		vector<Ficha*> posiblejugada = (this->getFichas1());
+		cout << "Juega el jugador1" << endl << "Hay " << posiblejugada.size() << " jugadas posibles";
+		//mesa[i]->imprimirEstado();
+		Mesa * siguienteMesa = new Mesa;
+		Mesa * mesaGanadora = nullptr;
+
+		if (posiblejugada.size() == 0)
+		{
+			siguienteMesa->clonarMesa(*this);
+
+			if (siguienteMesa->getContaPozo() >= 28)
+			{
+				siguienteMesa->jugadorAnteriorHaPasado++;
+			}
+			else
+				siguienteMesa->cogerFichaJ1();
+
+			cout << "Jug1 coge una del pozo";
+			siguienteMesa->setQuienSale(1);
+			mesaGanadora = siguienteMesa->jugarPartida();
+			return mesaGanadora;
+
+		}
+		else
+		{
+			for (int cont = 0; cont < posiblejugada.size(); cont++) {
+
+				Ficha f = *posiblejugada.at(cont);
+				f.imprimir();
+
+				siguienteMesa->clonarMesa(*this);
+				siguienteMesa->jugadorAnteriorHaPasado = 0;
+
+				cout << "Juga1 pone ficha: ";
+				posiblejugada.at(cont)->imprimir();
+				siguienteMesa->ponerFicha(posiblejugada.at(cont));
+				siguienteMesa->setQuienSale(1);
+
+				mesaGanadora = siguienteMesa->jugarPartida();
+
+				if (mesaGanadora)
+				{
+					return mesaGanadora;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
