@@ -16,7 +16,7 @@ int main()
 	
 	Mesa * mesaGanadora = mesa->jugarPartida();
 
-	mesaGanadora->imprimirEstado();
+	
 	
 		
 }

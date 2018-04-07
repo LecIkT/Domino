@@ -91,6 +91,8 @@ void Jugador::soltarFicha(Ficha* ficha)
 	if (encontrado != -1) {
 		borrarFicha(encontrado);
 	}
+	else
+		cout << "HOLA ";
 }
 
 

@@ -6,7 +6,6 @@ class Ficha
 	//Atributos privados por defecto. Esta clase sirve para crear ambos valores de las fichas
 	int valor1;//Valor de arriba de la ficha
 	int valor2;//Valor de abajo de la ficha
-	bool usada;
 public:
 
 	Ficha();//Contructor por defecto;
@@ -15,8 +14,6 @@ public:
 	int obtenerValor2();
 	bool esDoble();
 	int puntuacion();
-	void marcarUsada();
-	void noUsada();
 	void imprimir();
 	~Ficha();//Destructor
 };

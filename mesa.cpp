@@ -257,6 +257,8 @@ void Mesa::clonarMesa(Mesa const &mesa) {
 	this->extremo2 = mesa.extremo2;
 	this->posicionPozo = mesa.posicionPozo;
 	this->posicionMesa = mesa.posicionMesa;
+	this->salida = mesa.salida;
+	this->jugadorAnteriorHaPasado = mesa.jugadorAnteriorHaPasado;
 }
 
 Ficha* Mesa::cogerFicha() {
@@ -283,31 +285,44 @@ void Mesa::imprimirEstado()
 
 Mesa * Mesa::jugarPartida()
 {
+	Mesa * siguienteMesa = new Mesa;
+	Mesa * mesaGanadora = nullptr;
+
+	//Si gana jugador1 se devuelve la mesa actual porque es la ganadora
 	if (this->fichasJ1() == 0)
 	{
+		cout << "Jugador 1 gana" << endl;
+		this->imprimirEstado();
 		return this;
 	}
 
+	//Si gana jugador dos , devuelvo un nullptr porque no es valida y vuelvo al estado anterior
 	if (this->fichasJ2() == 0)
 	{
 		return nullptr;
 	}
 
+	//Si es tablas , devuelvo un nullptr porque no es valida y vuelvo al estado anterior
 	if (this->jugadorAnteriorHaPasado == 2)
 	{
 		return nullptr;
 	}
 
+	//Si la mesa actual el ultimo en poner ficha ha sido jugador 1, continua el jugador2
 	if (this->getQuienSale() == 1)
 	{
 		vector<Ficha*> posiblejugada = (this->getFichas2());
-		cout << "Juega el jugador2" << endl << "Hay " << posiblejugada.size() << " jugadas posibles";
-		//mesa[i]->imprimirEstado();
-		Mesa * siguienteMesa = new Mesa;
-		Mesa * mesaGanadora = nullptr;
+		cout << "Juega el jugador2:" << endl << "Hay " << posiblejugada.size() << " jugadas posibles:" << endl;
+
+		for (int cont = 0; cont < posiblejugada.size(); cont++) {
+
+			Ficha f = *posiblejugada.at(cont);
+			f.imprimir();
+		}
 
 		if (posiblejugada.size() == 0)
 		{
+			//Copiamos nuestra mesa en una mesa nueva, para no hacer modificaciones en la mesa actual (this)
 			siguienteMesa->clonarMesa(*this);
 
 			if (siguienteMesa->getContaPozo() >= 28)
@@ -315,11 +330,16 @@ Mesa * Mesa::jugarPartida()
 				siguienteMesa->jugadorAnteriorHaPasado++;
 			}
 			else
+				//En la mesa nueva si se puede robo del pozo
 				siguienteMesa->cogerFichaJ2();
 
-			cout << "Jug2 coge una del pozo";
+			cout << "Jug2 coge una del pozo" << endl;
+
+			//En la mesa nueva actualizo quien ha tirado el ultimo
 			siguienteMesa->setQuienSale(2);
+			//Y sobre la mesa con los cambios realizados ejecutas una nueva iteracion
 			mesaGanadora = siguienteMesa->jugarPartida();
+			//Si he robado y gano devuelvo la mesa ganadora 
 			return mesaGanadora;
 
 		}
@@ -327,19 +347,21 @@ Mesa * Mesa::jugarPartida()
 		{
 			for (int cont = 0; cont < posiblejugada.size(); cont++) {
 
-				Ficha f = *posiblejugada.at(cont);
-				f.imprimir();
-
+				//Copia mesa para no hacer cambios
 				siguienteMesa->clonarMesa(*this);
 				siguienteMesa->jugadorAnteriorHaPasado = 0;
 
 				cout << "Juga2 pone ficha: ";
 				posiblejugada.at(cont)->imprimir();
+				//Pongo la ficha en mi mesa nueva
 				siguienteMesa->ponerFicha(posiblejugada.at(cont));
+				//Actualizo el ultimo jugador que ha puesto ficha
 				siguienteMesa->setQuienSale(2);
-
+				//Creo otra iteracion 
 				mesaGanadora = siguienteMesa->jugarPartida();
 
+				//Si la mesa es buena devuelvo esta mesa como ganadora y sino es bueno me quedo dentro del bucle
+				// y pruebo la siguiente posibilidad
 				if (mesaGanadora)
 				{
 					return mesaGanadora;
@@ -351,10 +373,13 @@ Mesa * Mesa::jugarPartida()
 	else
 	{
 		vector<Ficha*> posiblejugada = (this->getFichas1());
-		cout << "Juega el jugador1" << endl << "Hay " << posiblejugada.size() << " jugadas posibles";
-		//mesa[i]->imprimirEstado();
-		Mesa * siguienteMesa = new Mesa;
-		Mesa * mesaGanadora = nullptr;
+		cout << "Juega el jugador1" << endl << "Hay " << posiblejugada.size() << " jugadas posibles:" << endl;
+		
+		for (int cont = 0; cont < posiblejugada.size(); cont++) {
+
+			Ficha f = *posiblejugada.at(cont);
+			f.imprimir();
+		}
 
 		if (posiblejugada.size() == 0)
 		{
@@ -367,7 +392,7 @@ Mesa * Mesa::jugarPartida()
 			else
 				siguienteMesa->cogerFichaJ1();
 
-			cout << "Jug1 coge una del pozo";
+			cout << "Jug1 coge una del pozo" << endl;
 			siguienteMesa->setQuienSale(1);
 			mesaGanadora = siguienteMesa->jugarPartida();
 			return mesaGanadora;
@@ -376,9 +401,6 @@ Mesa * Mesa::jugarPartida()
 		else
 		{
 			for (int cont = 0; cont < posiblejugada.size(); cont++) {
-
-				Ficha f = *posiblejugada.at(cont);
-				f.imprimir();
 
 				siguienteMesa->clonarMesa(*this);
 				siguienteMesa->jugadorAnteriorHaPasado = 0;
